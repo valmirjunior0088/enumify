@@ -1,9 +1,10 @@
 [package]
 name = "enumify"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 license = "MIT"
 description = "A Rust macro that declares an `enum` (and a bunch of `impl From`s) based on a set of `struct`s"
+repository = "https://github.com/valmirjunior0088/enumify"
 
 [lib]
 proc_macro = true
