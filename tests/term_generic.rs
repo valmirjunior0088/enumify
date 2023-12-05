@@ -16,10 +16,12 @@ enumify::enumify! {
     }
 
     #[enumify(Box)]
-    #[allow(dead_code)]
     #[derive(Debug)]
     pub struct Abs<V> {
+        #[allow(dead_code)]
         variable: V,
+
+        #[allow(dead_code)]
         body: Term<V>,
     }
 }

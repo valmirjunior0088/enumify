@@ -1,6 +1,6 @@
 # enumify
 
-A Rust macro that declares an `enum` (and a bunch of `impl From`s) based on a set of `struct`s.
+A Rust macro that declares an `enum` (and a bunch of `impl From`s) based on a set of types.
 
 ## Examples
 
@@ -91,29 +91,38 @@ Working with recursive types in Rust is ever so very slightly annoying. One `Box
 ```rust
 enumify::enumify! {
     #[derive(Debug)]
-    pub enum Term<V>;
+    pub enum Term;
 
     #[derive(Debug)]
-    pub struct Var<V>(V);
-
-    #[enumify(Box)]
-    #[derive(Debug)]
-    pub struct App<V> {
-        function: Term<V>,
-        argument: Term<V>,
+    pub enum Var {
+        Free(String),
+        Bound(usize),
     }
 
     #[enumify(Box)]
     #[derive(Debug)]
-    pub struct Abs<V> {
-        variable: V,
-        body: Term<V>,
+    pub struct App {
+        function: Term,
+        argument: Term,
+    }
+
+    #[enumify(Box)]
+    #[derive(Debug)]
+    pub struct Abs {
+        variable: String,
+        body: Term,
     }
 }
 
-impl From<usize> for Term<usize> {
-    fn from(value: usize) -> Self {
-        Self::from(Var(value))
+impl From<String> for Term {
+    fn from(value: String) -> Self {
+        Self::from(Var::Free(value))
+    }
+}
+
+impl From<&str> for Term {
+    fn from(value: &str) -> Self {
+        Self::from(Var::Free(value.to_owned()))
     }
 }
 
@@ -121,10 +130,10 @@ impl From<usize> for Term<usize> {
 fn it_works() {
     let _ = Term::from(App {
         function: Term::from(Abs {
-            variable: 0,
-            body: Term::from(0),
+            variable: String::from("x"),
+            body: Term::from("x"),
         }),
-        argument: Term::from(1),
+        argument: Term::from("y"),
     });
 }
 ```
